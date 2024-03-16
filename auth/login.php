@@ -1,12 +1,12 @@
 <?php
 include '../init.php';
 
-if ($_SERVER['REQUEST_METHOD'] == "GET") {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     // التحقق من وجود المتغيرات في الطلب
-    if (isset($_GET['password']) && isset($_GET['email'])) {
-        $pass = sha1($_GET['password']);
-        $email = filter_var($_GET['email'], FILTER_VALIDATE_EMAIL);
+    if (isset($_POST['password']) && isset($_POST['email'])) {
+        $pass = sha1($_POST['password']);
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
 
         // التحقق من صحة عنوان البريد الإلكتروني
         if (!$email) {
@@ -15,36 +15,36 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             exit();
         }
 
-        $stmt = $con->prepare('SELECT * FROM users WHERE Email = ?');
-        $stmt->execute(array($email));
+        $stmt = $con->prepare('SELECT * FROM users WHERE Email = ? AND Password =?');
+        $stmt->execute(array($email, $pass));
 
         // التحقق من أن هناك بيانات تم استرجاعها
         if ($stmt->rowCount() > 0) {
-            $userInfo =  $stmt->fetch(PDO::FETCH_ASSOC);
+            $userInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             // التحقق من صحة كلمة المرور
             if ($userInfo['Password'] === $pass) {
                 $data = array(
                     'id' => $userInfo['id'],
                     'username' => $userInfo['Username'],
-                    'email' => $userInfo['Email']
+                    'email' => $userInfo['Email'],
                 );
-                echo json_encode(array('userinfo' => $data));
+                $response = json_encode(array('message' => 'success', 'userinfo' => $data));
                 $_SESSION['username'] = $userInfo['Username'];
             } else {
                 // كلمة المرور غير صحيحة
-                echo json_encode(array('error' => 'Incorrect password'));
+                $response = json_encode(array('message' => 'Error', 'error' => 'Incorrect password'));
             }
         } else {
             // المستخدم غير موجود
-            echo json_encode(array('error' => 'User not found'));
+            $response = json_encode(array('message' => 'Error', 'error' => 'User not found'));
         }
 
-        // تحديد نوع المحتوى ليكون JSON
-        header('Content-Type: application/json');
+        echo $response;
         exit();
     } else {
         http_response_code(400); // الطلب غير صالح
-        echo json_encode(array('error' => 'Missing parameters'));
+        $response = json_encode(array('message' => 'erorr', 'error' => 'Missing parameters'));
+        echo $response;
         exit();
     }
 }
