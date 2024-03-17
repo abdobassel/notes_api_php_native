@@ -98,3 +98,12 @@ function getLatestItems($select, $from, $order, $limit = 5)
     $rows = $stm->fetchAll();
     return $rows;
 }
+
+function deleteFile($dir, $filename)
+{
+    if (file_exists($dir . $filename)) {
+        unlink($dir . $filename);
+    } else {
+        echo 'No Such Image Name';
+    }
+}

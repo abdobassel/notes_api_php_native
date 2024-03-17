@@ -1,12 +1,19 @@
 <?php
-
-
 include '../init.php';
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (isset($_POST['note_id'])) {
         $noteid = filter_input(INPUT_POST, 'note_id', FILTER_VALIDATE_INT);
     }
+    if (isset($_POST['img_name']) && $_POST['img_name'] !== '') {
+        $imageNoteName = htmlspecialchars(strip_tags($_POST['img_name']));
+        $directory = "./apis/uploads/Images/";
+        if (isset($directory)) {
+            deleteFile($directory, $imageNoteName);
+        }
+    }
+
 
     $checkNote = checkItem('id', 'notes', $noteid);
 
@@ -15,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $stmt->execute(array($noteid));
 
         if ($stmt->rowCount() > 0) {
-
 
             echo json_encode(array('status' => true, 'msg' => 'Note Deleted'));
             http_response_code(200);
