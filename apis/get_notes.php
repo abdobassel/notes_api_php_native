@@ -13,18 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if ($stm->rowCount() > 0) {
             // استرداد كل الصفوف المتطابقة
             $data =  $stm->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode(array('status' => true, 'notes' => $data));
+            echo json_encode(array('status' => "success", 'data' => $data));
             http_response_code(200);
         } else {
             // رسالة الخطأ إذا لم يتم العثور على ملاحظات
-            echo json_encode(array('status' => false, 'message' => 'No notes found for the user'));
+            echo json_encode(array('status' => "no data", 'message' => 'No notes found for the user'));
             http_response_code(404);
         }
     } else {
         // رسالة الخطأ إذا كان معرف المستخدم غير موجود
-        echo json_encode(array('status' => false, 'message' => 'User ID is missing'));
+        echo json_encode(array('status' => "Error ID", 'message' => 'User ID is missing'));
     }
 } else {
     http_response_code(400);
-    echo json_encode(array('error' => 'method valid'));
+    echo json_encode(array('status' => "method error", 'message' => 'method valid'));
 }

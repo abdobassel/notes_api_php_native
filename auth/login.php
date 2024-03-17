@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $stmt = $con->prepare('SELECT * FROM users WHERE Email = ? AND Password =?');
         $stmt->execute(array($email, $pass));
 
+
         // التحقق من أن هناك بيانات تم استرجاعها
         if ($stmt->rowCount() > 0) {
             $userInfo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         exit();
     } else {
         http_response_code(400); // الطلب غير صالح
-        $response = json_encode(array('message' => 'erorr', 'error' => 'Missing parameters'));
+        $response = json_encode(array('message' => 'Error', 'error' => 'Missing parameters'));
         echo $response;
         exit();
     }
