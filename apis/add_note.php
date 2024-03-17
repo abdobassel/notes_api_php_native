@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_POST['user_id'])) {
         $userid = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
     }
-    $body = filter_var($_POST['body'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $body = htmlspecialchars(strip_tags($_POST['body']));
     $title = htmlspecialchars(strip_tags($_POST['title']));
 
     $stmt = $con->prepare('INSERT INTO notes (title, body, user_id) VALUES (?, ?, ?)');
