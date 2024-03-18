@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
     if (isset($_POST['img_name']) && $_POST['img_name'] !== '') {
         $imageNoteName = htmlspecialchars(strip_tags($_POST['img_name']));
-        $directory = "./apis/uploads/Images/";
+        $directory = "../apis/uploads/Images/";
         if (isset($directory)) {
             deleteFile($directory, $imageNoteName);
         }

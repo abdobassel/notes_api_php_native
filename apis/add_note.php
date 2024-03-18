@@ -45,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 }
             } else {
                 // إذا لم يتم تحميل أي صورة، ضع $note_image فارغة
-                $note_image = '';
+                $note_image = 'note.png';
+                move_uploaded_file('note', "uploads\Images\\" . $note_image);
             }
 
             // إدراج الملاحظة إلى قاعدة البيانات
